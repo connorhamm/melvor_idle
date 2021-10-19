@@ -18,19 +18,23 @@ def img_template(file):
     template = cv2.Canny(template, 50, 200)
     return template
 
-def detection(monitor, img_template, threshold):
+def take_image(monitor, screenshot):
     with mss() as sct:
         img = sct.grab(monitor)
 
-        # Take Screenshot for debugging
-        # output = str(datetime.now()) + ".png"
-        # tools.to_png(img.rgb, img.size, output=output)
-        # print(output)
+        # Take Screenshot for debugging purposes
+        if screenshot == True:
+            output = str(datetime.now()) + ".png"
+            tools.to_png(img.rgb, img.size, output=output)
+            print(output)
 
         img = np.array(img)
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         edged = cv2.Canny(gray, 50, 200)
+        return edged
 
+
+def matchTemplate(img_template, edged, threshold):
         result = cv2.matchTemplate(edged, img_template, cv2.TM_CCOEFF_NORMED)
         (_, maxVal, _, maxLoc) = cv2.minMaxLoc(result)
 
@@ -52,6 +56,8 @@ mon = {'top': 180, 'left': 90, 'width': 930, 'height': 480}
 test_template = img_template("Test.png")
 
 # State Machine
-if detection(mon,test_template,0.9) == True:
+edged_img = take_image(mon,True)
+
+if matchTemplate(test_template, edged_img, 0.9) == True:
     print("Selecting an Item")
     item_select()
