@@ -3,6 +3,7 @@ Main issue:
 - Miss clicks on food/armour due to the text box being different sizes based on the item
 - Doesn't select good items w/ armour reduction
 - Doesn't auto heal when health is too low
+- You want fast reaction time to health bar, so when running will need a seperate check
 
 1. Find identifier for amour/food/etc. - nah, need to use icon
 2. Can I move to location based on the image? Test this feature and implement if possible. - yes, feature work
@@ -62,35 +63,13 @@ def matchTemplate(img_template, edged, threshold):
         else:
             return False, 0
 
-# Needs update based on new method of armour selection
-def armour_select():
-    print("Selecting Armour")
-    pyautogui.moveTo(1000,625)
-    pyautogui.click()
+def matched_click(loc, w, h):
+    x = loc[1][0] + w / 2
+    y = loc[0][0] + h / 2
+    pyautogui.moveTo(x,y)
     time.sleep(1)
     pyautogui.click()
-
-# Needs update based on new method of food selection
-def food_select():
-    print("Selecting food")
-    pyautogui.moveTo(1000,800)
-    pyautogui.click()
-    time.sleep(1)
-    pyautogui.moveTo(1000,650)
-    pyautogui.click()    
-
-# Needs update based on new method of selection
-def restart():
-    print("Restarting Game")
-    pyautogui.moveTo(950,775)
-    pyautogui.click()
-    time.sleep(1)
-    pyautogui.moveTo(950,700)
-    pyautogui.click()
-    time.sleep(1)
-    pyautogui.click()
-    pyautogui.moveTo(950,425)
-    pyautogui.click()
+    time.sleep(1)  
 
 ################################ MAIN CODE #####################################
 time.sleep(3)
@@ -99,30 +78,34 @@ time.sleep(3)
 mon = {'top': 0, 'left': 0, 'width': 1920, 'height': 1080}
 
 # Set image template
-wave_complete_template = img_template("wave_complete.png")
-w1, h1 = wave_complete_template.shape[::-1]
+armour_template = img_template("armour.png")
+w1, h1 = armour_template.shape[::-1]
 
-you_died_template = img_template("you_died.png")
-w2, h2 = you_died_template.shape[::-1]
+ok_template = img_template("ok.png")
+w2, h2 = ok_template.shape[::-1]
+
+food_template = img_template("food.png")
+w3, h3, = food_template.shape[::-1]
 
 # Counters
-wave_complete_cnt = 0
+armour_cnt = 0
 
 # State Machine
 while(1):
     edged_img = take_image(mon,False)
 
-    wave_complete, loc = matchTemplate(wave_complete_template, edged_img, 0.9)
-    if wave_complete == True:
-        print("Event: Wave Complete")
-        if wave_complete_cnt > 4:
-            food_select()
-            wave_complete_cnt = 0
-        else:
-            armour_select()
-        wave_complete_cnt += 1
+    armour, armour_loc = matchTemplate(armour_template, edged_img, 0.9)
+    food, food_loc = matchTemplate(food_template, edged_img, 0.9)
+    if armour == True and armour_cnt < 5:
+        print("Event: Selecting Armour")
+        matched_click(armour_loc, w1, h1)
+        armour_cnt += 1
+    elif armour == True and armour_cnt >= 5:
+        print("Event: Selecting Food")
+        matched_click(food_loc, w3, h3)
     
-    you_died, loc = matchTemplate(you_died_template, edged_img, 0.9)
-    if you_died == True:
-        print("Event: You Died!")
-        restart()
+    # ok, loc = matchTemplate(ok_template, edged_img, 0.9)
+    # if ok == True:
+    #     print("Event: You Died!")
+    #     print("Event: Clicking Restart")
+    #     matched_click(loc, w1, h1)
