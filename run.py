@@ -24,12 +24,14 @@ import time
 import numpy as np
 from datetime import datetime
 
+# returns image template
 def img_template(file):
     template = cv2.imread(file)
     template = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
     template = cv2.Canny(template, 50, 200)
     return template
 
+# returns image to run comparison for matchTemplate
 def take_image(monitor, screenshot):
     with mss() as sct:
         img = sct.grab(monitor)
@@ -45,6 +47,8 @@ def take_image(monitor, screenshot):
         edged = cv2.Canny(gray, 50, 200)
         return edged
 
+# returns True/False if threshold is met
+# returns location variable
 def matchTemplate(img_template, edged, threshold):
         result = cv2.matchTemplate(edged, img_template, cv2.TM_CCOEFF_NORMED)
         (_, maxVal, _, maxLoc) = cv2.minMaxLoc(result)
@@ -58,6 +62,7 @@ def matchTemplate(img_template, edged, threshold):
         else:
             return False, 0
 
+# Needs update based on new method of armour selection
 def armour_select():
     print("Selecting Armour")
     pyautogui.moveTo(1000,625)
@@ -65,6 +70,7 @@ def armour_select():
     time.sleep(1)
     pyautogui.click()
 
+# Needs update based on new method of food selection
 def food_select():
     print("Selecting food")
     pyautogui.moveTo(1000,800)
@@ -73,6 +79,7 @@ def food_select():
     pyautogui.moveTo(1000,650)
     pyautogui.click()    
 
+# Needs update based on new method of selection
 def restart():
     print("Restarting Game")
     pyautogui.moveTo(950,775)
