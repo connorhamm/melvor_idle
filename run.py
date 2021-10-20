@@ -1,7 +1,5 @@
 """
-1. Add image of item selection
-2. Verify image detection is working w/ correct threshold
-3. Add in item selection functionality
+1. Setup function to make sure image correct food / armour / etc. is selected
 """
 
 import cv2
@@ -24,7 +22,7 @@ def take_image(monitor, screenshot):
 
         # Take Screenshot for debugging purposes
         if screenshot == True:
-            output = str(datetime.now()) + ".png"
+            output = str(datetime.now())[:5:1]+ ".png"
             tools.to_png(img.rgb, img.size, output=output)
             print(output)
 
@@ -44,20 +42,61 @@ def matchTemplate(img_template, edged, threshold):
             print("Threshold reached")
             return True  
 
-def item_select():
-    print("Selecting Item")
+def armour_select():
+    print("Selecting Armour")
+    pyautogui.moveTo(1000,625)
+    pyautogui.click()
+    time.sleep(1)
+    pyautogui.click()
+
+def food_select():
+    print("Selecting food")
+    pyautogui.moveTo(1000,800)
+    pyautogui.click()
+    time.sleep(1)
+    pyautogui.moveTo(1000,650)
+    pyautogui.click()    
+
+def restart():
+    print("Restarting Game")
+    pyautogui.moveTo(950,775)
+    pyautogui.click()
+    time.sleep(1)
+    pyautogui.moveTo(950,700)
+    pyautogui.click()
+    time.sleep(1)
+    pyautogui.click()
+    pyautogui.moveTo(950,425)
+    pyautogui.click()
+
 
 ################################ MAIN CODE #####################################
+time.sleep(3)
+
 
 # Set monitor detection WxH and offsets
-mon = {'top': 180, 'left': 90, 'width': 930, 'height': 480}
+mon = {'top': 0, 'left': 0, 'width': 1920, 'height': 1080}
 
 # Set image template
-test_template = img_template("Test.png")
+wave_complete_template = img_template("wave_complete.png")
+you_died_template = img_template("you_died.png")
+
+# Counters
+wave_complete_cnt = 0
 
 # State Machine
-edged_img = take_image(mon,True)
 
-if matchTemplate(test_template, edged_img, 0.9) == True:
-    print("Selecting an Item")
-    item_select()
+while(1):
+    edged_img = take_image(mon,False)
+
+    if matchTemplate(wave_complete_template, edged_img, 0.9) == True:
+        print("Event: Wave Complete")
+        if wave_complete_cnt > 4:
+            food_select()
+            wave_complete_cnt = 0
+        else:
+            armour_select()
+        wave_complete_cnt += 1
+    elif matchTemplate(you_died_template,edged_img,0.9) == True:
+        print("Event: You Died!")
+        restart()
