@@ -1,14 +1,10 @@
 """
 Main issue:
 - Miss clicks on food/armour due to the text box being different sizes based on the item
-- Doesn't select good items w/ armour reduction
+- Doesn't select good items w/ damage reduction
 - Doesn't auto heal when health is too low
-- You want fast reaction time to health bar, so when running will need a seperate check
+- You want fast reaction time to health bar, so when running will need a seperate check, this feature will be added later
 
-1. Find identifier for amour/food/etc. - nah, need to use icon
-2. Can I move to location based on the image? Test this feature and implement if possible. - yes, feature work
-3. Implement feature - Done
-4. Add in database of all food/armour/etc?  If specific item not found select food?  Or select any item until a certain point?
 5. Add in a template for each category button, re-roll, armour, weapon, food
 6. Add in a template for all DR equipment
 7. Add in a template for all best weapons
@@ -72,7 +68,6 @@ def matched_click(loc, w, h):
     time.sleep(1)  
 
 ################################ MAIN CODE #####################################
-time.sleep(3)
 
 # Set monitor detection WxH and offsets
 mon = {'top': 0, 'left': 0, 'width': 1920, 'height': 1080}
@@ -91,6 +86,8 @@ w3, h3, = food_template.shape[::-1]
 armour_cnt = 0
 
 # State Machine
+time.sleep(3)
+
 while(1):
     edged_img = take_image(mon,False)
 
