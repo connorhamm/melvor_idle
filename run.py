@@ -5,7 +5,6 @@ Main issue:
 - Doesn't auto heal when health is too low
 - You want fast reaction time to health bar, so when running will need a seperate check, this feature will be added later
 
-5. Add in a template for each category button, re-roll, armour, weapon, food
 6. Add in a template for all DR equipment
 7. Add in a template for all best weapons
 8. Add in a template for all best food
@@ -65,7 +64,9 @@ def matched_click(loc, w, h):
     pyautogui.moveTo(x,y)
     time.sleep(1)
     pyautogui.click()
-    time.sleep(1)  
+    time.sleep(1)
+    pyautogui.moveTo(10,10)
+    time.sleep(1)
 
 ################################ MAIN CODE #####################################
 
@@ -73,14 +74,20 @@ def matched_click(loc, w, h):
 mon = {'top': 0, 'left': 0, 'width': 1920, 'height': 1080}
 
 # Set image template
-armour_template = img_template("armour.png")
+armour_template = img_template("armour.PNG")
 w1, h1 = armour_template.shape[::-1]
 
-ok_template = img_template("ok.png")
+ok_template = img_template("ok.PNG")
 w2, h2 = ok_template.shape[::-1]
 
-food_template = img_template("food.png")
-w3, h3, = food_template.shape[::-1]
+food_template = img_template("food.PNG")
+w3, h3 = food_template.shape[::-1]
+
+one_x_template = img_template("1x.PNG")
+w4, h4 = food_template.shape[::-1]
+
+start_raid_template = img_template("start_raid.PNG")
+w5, h5 = start_raid_template.shape[::-1]
 
 # Counters
 armour_cnt = 0
@@ -96,13 +103,27 @@ while(1):
     if armour == True and armour_cnt < 5:
         print("Event: Selecting Armour")
         matched_click(armour_loc, w1, h1)
+        time.sleep(1)
+        edged_img = take_image(mon,False)
+        item, item_loc = matchTemplate(one_x_template, edged_img, 0.5)
+        matched_click(item_loc, w4, h4)
         armour_cnt += 1
+
     elif armour == True and armour_cnt >= 5:
         print("Event: Selecting Food")
         matched_click(food_loc, w3, h3)
+        time.sleep(1)
+        edged_img = take_image(mon,False)
+        item, item_loc = matchTemplate(one_x_template, edged_img, 0.5)
+        matched_click(item_loc, w4, h4)
+        armour = 0
     
-    # ok, loc = matchTemplate(ok_template, edged_img, 0.9)
-    # if ok == True:
-    #     print("Event: You Died!")
-    #     print("Event: Clicking Restart")
-    #     matched_click(loc, w1, h1)
+    ok, loc = matchTemplate(ok_template, edged_img, 0.9)
+    if ok == True:
+        print("Event: You Died!")
+        matched_click(loc, w1, h1)
+
+    start_raid, start_raid_loc = matchTemplate(start_raid_template, edged_img, 0.9)
+    if start_raid == True:
+        print("Event: Starting Raid!")
+        matched_click(start_raid_loc, w5, h5)
