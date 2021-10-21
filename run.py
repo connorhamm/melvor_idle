@@ -11,11 +11,6 @@ Select better healing items - complete today if its fun to do so
 1.  Add template for items with 2x 0's in HP recovery. - pending screenshot
 2.  test functionality - pending
 
-Auto Heal - Step 1 - complete today if its fun to do so
-1. Add template for wave complete / died / ok - pending new screenshot and monitor dimensions
-2. Implement template to only move into equipment phase if wave complete template is detected - done
-3. Test feature - pending
-
 Auto Heal - Step 2 
 1. Change picture position for health bar
 2. Add template for target health missing
@@ -135,8 +130,6 @@ class idle_bot:
     def weapon(self):
         print("State: Weapon Selection")
 
-    def restart(self):
-        print("State: Restart")
 
 ################################ MAIN CODE #####################################
 
