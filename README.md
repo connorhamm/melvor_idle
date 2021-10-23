@@ -11,5 +11,8 @@ Ran in 1080p monitor.
 
 Features:
 - Auto eat on low health (still in development)
-- Auto select equipment
-- Restarts on death
+- Auto select equipment (still in development)
+- Restarts on death 
+
+How to run:
+python run.py

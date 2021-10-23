@@ -4,7 +4,6 @@ TO DO
 Main issue:
 - Doesn't select good items w/ damage reduction
 - Doesn't auto heal when health is too low, this what causes early deaths ()
-- Doesn't select good weapon
 
 Auto Heal - Step 2 
 1. Change picture position for health bar
@@ -14,14 +13,13 @@ Auto Heal - Step 2
 5. Add template for click to heal
 6. Implement click to heal feature
 
-DR Reduction
-1. Look into method for being able to check if good item is already equipped
-2. Create list of best in slot melee gear if best in slot is not available, select something else.
+DR Reduction - complete core function today if its fun to do so
+1. Test current template and comment out picture I haven't taken - pending
 
-Weapon
-1. Take img of best weapons
-2. Setup templates for best weapons
-3. Use elif to select different weapons
+Weapon - complete core function today if its fun to do so
+1. Test current template and comment out pictures I haven't taken - pending
+2. Test w/ new pictures - pending
+
 - if not what you want, keep selecting weapon, else select nothing
 - 1st part, available equipment up to lvl 69
 """
@@ -38,6 +36,9 @@ class idle_bot:
         # Set image template
         self.armour_template = img_template("armour.PNG")
         self.w1, self.h1 = self.armour_template.shape[::-1]
+
+        self.weapon_template = img_template("weapon.PNG")
+        self.w_weapon, self.h_weapon = self.weapon_template.shape[::-1]
 
         self.ok_template = img_template("ok.PNG")
         self.w2, self.h2 = self.ok_template.shape[::-1]
@@ -93,8 +94,44 @@ class idle_bot:
         self.whale_template = img_template("./food/whale.PNG")
         self.w_whale, self.h_whale = self.whale_template.shape[::-1]
 
-        self.armour_cnt = 0
+        # Weapons < lvl 69 (rune, dragon, desert sabre)
+        self.dragon_sword_template = img_template("./weapon/dragon_sword.PNG")
+        self.w_dragon_sword, self.h_dragon_sword = self.dragon_sword_template.shape[::-1]        
 
+        self.dragon_battleaxe_template = img_template("./weapon/dragon_battleaxe.PNG")
+        self.w_dragon_battleaxe, self.h_dragon_battleaxe = self.dragon_battleaxe_template.shape[::-1]
+
+        self.dragon_scim_template = img_template("./weapon/dragon_scim.PNG")
+        self.w_dragon_scim, self.h_dragon_scim = self.dragon_scim_template.shape[::-1]
+
+        self.dragon_claw_template = img_template("./weapon/dragon_claw.PNG")
+        self.w_dragon_claw, self.h_dragon_claw = self.dragon_claw_template.shape[::-1]
+
+        self.rune_sword_template = img_template("./weapon/rune_sword.PNG")
+        self.w_rune_sword, self.h_rune_sword = self.rune_sword_template.shape[::-1]        
+
+        self.rune_battleaxe_template = img_template("./weapon/rune_battleaxe.PNG")
+        self.w_rune_battleaxe, self.h_rune_battleaxe = self.rune_battleaxe_template.shape[::-1]
+
+        self.rune_scim_template = img_template("./weapon/rune_scim.PNG")
+        self.w_rune_scim, self.h_rune_scim = self.rune_scim_template.shape[::-1]
+
+        self.desert_sabre_template = img_template("./weapon/desert_sabre.PNG")
+        self.w_desert_sabre, self.h_desert_sabre = self.desert_sabre_template.shape[::-1]
+
+        self.miolite_sceptre_template = img_template("./weapon/miolite_sceptre.PNG")
+        self.w_miolite_sceptre, self.h_miolite_sceptre = self.miolite_sceptre_template.shape[::-1]
+ 
+        # Weapons > lvl 69 
+        self.ancient_claw_template = img_template("./weapon/ancient_claw.PNG")
+        self.w_ancient_claw, self.h_ancient_claw = self.ancient_claw_template.shape[::-1]
+
+        # Armour < lvl 69
+        self.armour1_template = img_template("./armour/armour1.PNG")
+        self.w_armour1, self.h_armour1 = self.armour1_template.shape[::-1]        
+
+        self.armour_cnt = 0
+        self.weapon_cnt = 0
         self.queue()
 
     def queue(self):
@@ -131,8 +168,8 @@ class idle_bot:
     def equipment(self):
         print("State: Equipment Selection")
         armour, armour_loc = matchTemplate(self.armour_template, self.edged_img, 0.9)
-
         food, food_loc = matchTemplate(self.food_template, self.edged_img, 0.9)
+        weapon, weapon_loc = matchTemplate(self.weapon_template, self.edged_img, 0.9)
 
         if (armour == True) and (self.armour_cnt < 3):
             print("Event: Selecting Armour")
@@ -146,6 +183,14 @@ class idle_bot:
             self.armour_cnt = -3
             time.sleep(1)
             self.food()
+
+        elif (self.weapon_cnt >= 5) and (weapon == True):
+            print("Event: Selecting Weapon")
+            matched_click(weapon_loc, self.w_weapon, self.h_weapon)
+            self.weapon_cnt = -3
+            time.sleep(1)
+            self.weapon()
+
 
     def food(self):
         print("State: Food Selection")
@@ -195,15 +240,54 @@ class idle_bot:
     def armour(self):
         print("State: Armour Selection")
         edged_img = take_image(self.mon,False)
-        item, item_loc = matchTemplate(self.one_x_template, edged_img, 0.5)
-        matched_click(item_loc, self.w4, self.h4)
+        
+        armour1, armour1_loc = matchTemplate(self.armour1_template, edged_img, 0.6)
+
+        if armour1 == True:
+            matched_click(armour1_loc, self.w_armour1, self.h_armour1)
+        else:
+            item, item_loc = matchTemplate(self.one_x_template, edged_img, 0.5)
+            matched_click(item_loc, self.w4, self.h4)
         self.armour_cnt += 1
-        print(self.armour_cnt)
     
     def weapon(self):
         print("State: Weapon Selection")
+        edged_img = take_image(self.mon,False)
 
+        rune_sword, rune_sword_loc = matchTemplate(self.rune_sword_template, edged_img, 0.6)
+        rune_battleaxe, rune_battleaxe_loc = matchTemplate(self.rune_battleaxe_template, edged_img, 0.6)
+        rune_scim, rune_scim_loc = matchTemplate(self.rune_scim_template, edged_img, 0.6)
+        dragon_sword, dragon_sword_loc = matchTemplate(self.dragon_sword_template, edged_img, 0.6)
+        dragon_battleaxe, dragon_battleaxe_loc = matchTemplate(self.dragon_battleaxe_template, edged_img, 0.6)
+        dragon_scim, dragon_scim_loc = matchTemplate(self.dragon_scim_template, edged_img, 0.6)
+        dragon_claw, dragon_claw_loc = matchTemplate(self.dragon_claw_template, edged_img, 0.6)
+        desert_sabre, desert_sabre_loc = matchTemplate(self.desert_sabre_template, edged_img, 0.6)
+        miolite_sceptre, miolite_sceptre_loc = matchTemplate(self.miolite_sceptre_template, edged_img, 0.6)
 
+        if dragon_claw == True:
+            matched_click(dragon_claw_loc, self.w_dragon_claw, self.h_dragon_claw)
+        elif dragon_sword == True:
+            matched_click(dragon_sword_loc, self.w_dragon_sword, self.h_dragon_sword)
+        elif dragon_scim == True:
+            matched_click(dragon_scim_loc, self.w_dragon_scim, self.h_dragon_scim)
+        elif dragon_battleaxe == True:
+            matched_click(dragon_battleaxe_loc, self.w_dragon_battleaxe, self.h_dragon_battleaxe)
+        elif miolite_sceptre == True:
+            matched_click(miolite_sceptre_loc, self.w_miolite_sceptre, self.h_miolite_sceptre)
+        elif desert_sabre == True:
+            matched_click(desert_sabre_loc, self.w_desert_sabre, self.h_desert_sabre)
+        elif rune_sword == True:
+            matched_click(rune_sword_loc, self.w_rune_sword, self.h_rune_sword)
+        elif rune_scim == True:
+            matched_click(rune_scim_loc, self.w_rune_scim, self.h_rune_scim)
+        elif rune_battleaxe == True:
+            matched_click(rune_battleaxe_loc, self.w_rune_battleaxe, self.h_rune_battleaxe)
+        else:
+            _, item_loc = matchTemplate(self.one_x_template, edged_img, 0.6)
+            matched_click(item_loc, self.w4, self.h4)
+        self.weapon_cnt += 1
+        time.sleep(1)
+                    
 ################################ MAIN CODE #####################################
 
 print("Slyturtle's Mevlor Idle Bot")
