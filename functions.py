@@ -17,7 +17,9 @@ def take_image(monitor, screenshot):
         img = sct.grab(monitor)
 
         if screenshot == True:
-            output = str(datetime.now())[:5:1]+ ".png"
+            now = datetime.now() # current date and time
+            time = now.strftime("%H-%M-%S")
+            output = "./screenshots/" + str(time) + ".png"
             tools.to_png(img.rgb, img.size, output=output)
             print(output)
 
