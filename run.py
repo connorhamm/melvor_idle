@@ -159,14 +159,18 @@ class idle_bot:
             edged_img = take_image(self.mon,False)
             wave_complete, _ = matchTemplate(self.wave_complete_template, edged_img, 0.9)
             start_raid, _ = matchTemplate(self.start_raid_template, edged_img, 0.9)
-
+            you_died, _ = matchTemplate(self.you_died_template, edged_img, 0.7)
             if wave_complete == True:
                 self.wave_cnt += 1
-                print("Event: Wave Completed - " + self.wave_cnt)
+                print("Event: Wave Completed - " + str(self.wave_cnt))
                 self.equipment()
             elif start_raid == True:
                 self.death_cnt += 1
-                print("Event: Death - " + self.death_cnt)
+                print("Event: Death - " + str(self.death_cnt))
+                break
+            elif you_died == True:
+                self.death_cnt += 1
+                print("Event: Death - " + str(self.death_cnt))
                 break
         self.queue()
 
@@ -181,21 +185,21 @@ class idle_bot:
 
         if (self.wave_cnt % 7 == 0):
             self.weapon_cnt += 1
-            print("Event: Selecting Weapon - " + self.weapon_cnt)
+            print("Event: Selecting Weapon - " + str(self.weapon_cnt))
             matched_click(weapon_loc, self.w_weapon, self.h_weapon)
             time.sleep(1)
             self.weapon()
 
         elif (self.wave_cnt % 5 == 0):
             self.food_cnt += 1
-            print("Event: Selecting Food - " + self.food_cnt)
+            print("Event: Selecting Food - " + str(self.food_cnt))
             matched_click(food_loc, self.w_food, self.h_food)
             time.sleep(1)
             self.food()
         
         else:
             self.armour_cnt += 1
-            print("Event: Selecting Armour - " + self.armour_cnt)
+            print("Event: Selecting Armour - " + str(self.armour_cnt))
             matched_click(armour_loc, self.w_armour, self.h_armour)
             time.sleep(1)
             self.armour()
@@ -257,7 +261,7 @@ class idle_bot:
         foz, foz_loc = matchTemplate(self.foz_template, edged_img, 0.7)        
         infernal_cape, infernal_cape_loc = matchTemplate(self.infernal_cape_template, edged_img, 0.7)        
         dragonfire, dragonfire_loc = matchTemplate(self.dragonfire_template, edged_img, 0.7)
-        dragon_g, dragon_g_loc = matchTemplate(self.dragon_g_template, edged_img, 0.7)
+        dragon_g, dragon_g_loc = matchTemplate(self.dragon_g_template, edged_img, 0.83)
         rune_g, rune_g_loc = matchTemplate(self.rune_g_template, edged_img, 0.7)
         master, master_loc = matchTemplate(self.master_template, edged_img, 0.7)
         red_u, red_u_loc = matchTemplate(self.red_u_template, edged_img, 0.7)
