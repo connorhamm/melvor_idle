@@ -1,7 +1,6 @@
 """
 TO DO:
-1. Fix elite amulet of defense image to cover all elites and update name
-2. Run bot & collect images for better DR gear overnight
+1. Run bot & collect images for better DR gear overnight - Pending
 
 Main issue:
 - Doesn't auto heal when health is too low, this what causes early deaths ()
@@ -25,7 +24,7 @@ class idle_bot:
         self.w_weapon, self.h_weapon = self.weapon_template.shape[::-1]
 
         self.ok_template = img_template("ok.PNG")
-        self.w2, self.h2 = self.ok_template.shape[::-1]
+        self.w_ok, self.h_ok = self.ok_template.shape[::-1]
 
         self.food_template = img_template("food.PNG")
         self.w_food, self.h_food = self.food_template.shape[::-1]
@@ -37,7 +36,6 @@ class idle_bot:
         self.w_start_raid, self.h_start_raid = self.start_raid_template.shape[::-1]
 
         self.wave_complete_template = img_template("wave_complete.PNG")
-        self.w7, self.h7 = self.wave_complete_template.shape[::-1]
 
         self.you_died_template = img_template("you_died.PNG")
 
@@ -146,7 +144,7 @@ class idle_bot:
 
         if ok == True:
             print("Event: Clicking OK")
-            matched_click(loc, self.w1, self.h1)  
+            matched_click(loc, self.w_ok, self.h_ok)  
         elif start_raid == True:
             print("Event: Starting Raid!")
             matched_click(start_raid_loc, self.w_start_raid, self.h_start_raid)
