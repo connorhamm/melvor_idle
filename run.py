@@ -17,27 +17,27 @@ class idle_bot:
         self.mon = {'top': 0, 'left': 0, 'width': 1920, 'height': 1080}
 
         # Set image template
-        self.armour_template = img_template("armour.PNG")
+        self.armour_template = img_template("./states/armour.PNG")
         self.w_armour, self.h_armour = self.armour_template.shape[::-1]
 
-        self.weapon_template = img_template("weapon.PNG")
+        self.weapon_template = img_template("./states/weapon.PNG")
         self.w_weapon, self.h_weapon = self.weapon_template.shape[::-1]
 
-        self.ok_template = img_template("ok.PNG")
+        self.ok_template = img_template("./states/ok.PNG")
         self.w_ok, self.h_ok = self.ok_template.shape[::-1]
 
-        self.food_template = img_template("food.PNG")
+        self.food_template = img_template("./states/food.PNG")
         self.w_food, self.h_food = self.food_template.shape[::-1]
 
-        self.one_x_template = img_template("1x.PNG")
+        self.one_x_template = img_template("./states/1x.PNG")
         self.w_one_x, self.h_one_x = self.food_template.shape[::-1]
 
-        self.start_raid_template = img_template("start_raid.PNG")
+        self.start_raid_template = img_template("./states/start_raid.PNG")
         self.w_start_raid, self.h_start_raid = self.start_raid_template.shape[::-1]
 
-        self.wave_complete_template = img_template("wave_complete.PNG")
+        self.wave_complete_template = img_template("./states/wave_complete.PNG")
 
-        self.you_died_template = img_template("you_died.PNG")
+        self.you_died_template = img_template("./states/you_died.PNG")
 
         # Food
         self.angler_fish_template = img_template("./food/angler_fish.PNG")
