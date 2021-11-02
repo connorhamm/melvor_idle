@@ -1,0 +1,6 @@
+opencv-python==4.5.3.56
+PyAutoGUI==0.9.53
+DateTime==4.3
+PyDirectInput==1.0.4
+mss==6.1.0
+numpy==1.21.0

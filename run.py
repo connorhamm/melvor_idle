@@ -4,7 +4,6 @@ TO DO:
 
 Main issue:
 - Doesn't auto heal when health is too low, this what causes early deaths ()
-
 """
 
 from functions import *
