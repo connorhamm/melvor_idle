@@ -22,11 +22,7 @@ class idle_bot:
         self.weapon_template = img_template("./states/weapon.PNG")
         self.w_weapon, self.h_weapon = self.weapon_template.shape[::-1]
 
-<<<<<<< HEAD
         self.ok_template = img_template("ok.PNG")
-=======
-        self.ok_template = img_template("./states/ok.PNG")
->>>>>>> 75cedbbae8da165412ceb4ac08553d650af59d16
         self.w_ok, self.h_ok = self.ok_template.shape[::-1]
 
         self.food_template = img_template("./states/food.PNG")
@@ -151,38 +147,35 @@ class idle_bot:
 
         if ok == True:
             print("Event: Clicking OK")
-<<<<<<< HEAD
             matched_click(loc, self.w_ok, self.h_ok)
             time.sleep(1)
-=======
-            matched_click(loc, self.w_ok, self.h_ok)  
->>>>>>> 75cedbbae8da165412ceb4ac08553d650af59d16
         elif start_raid == True:
             print("Event: Starting Raid!")
             matched_click(start_raid_loc, self.w_start_raid, self.h_start_raid)
             self.combat()
 
     def combat(self):
+        print("State: Combat")
         time.sleep(1)
-        while(1):
-            print("State: Combat")
+
+        while(wave_complete != True and start_raid != True and you_died != True):
             edged_img = take_image(self.mon,False)
             wave_complete, _ = matchTemplate(self.wave_complete_template, edged_img, 0.7)
             start_raid, _ = matchTemplate(self.start_raid_template, edged_img, 0.9)
             you_died, _ = matchTemplate(self.you_died_template, edged_img, 0.7)
-            if wave_complete == True:
-                self.wave_cnt += 1
-                print("Event: Wave Completed - " + str(self.wave_cnt))
-                self.equipment()
-            elif start_raid == True:
-                self.death_cnt += 1
-                print("Event: Death - " + str(self.death_cnt))
-                break
-            elif you_died == True:
-                self.death_cnt += 1
-                print("Event: Death - " + str(self.death_cnt))
-                break
-        self.queue()
+
+        if wave_complete == True:
+            self.wave_cnt += 1
+            print("Event: Wave Completed - " + str(self.wave_cnt))
+            self.equipment()
+        elif start_raid == True:
+            self.death_cnt += 1
+            print("Event: Death - " + str(self.death_cnt))
+            self.queue()
+        elif you_died == True:
+            self.death_cnt += 1
+            print("Event: Death - " + str(self.death_cnt))
+            self.queue()
 
     def equipment(self):
         print("State: Equipment Selection")
@@ -199,6 +192,7 @@ class idle_bot:
             matched_click(weapon_loc, self.w_weapon, self.h_weapon)
             time.sleep(1)
             self.weapon()
+            self.combat()
 
         elif (self.wave_cnt % 5 == 0):
             self.food_cnt += 1
@@ -206,6 +200,7 @@ class idle_bot:
             matched_click(food_loc, self.w_food, self.h_food)
             time.sleep(1)
             self.food()
+            self.combat()
         
         else:
             self.armour_cnt += 1
@@ -213,6 +208,7 @@ class idle_bot:
             matched_click(armour_loc, self.w_armour, self.h_armour)
             time.sleep(1)
             self.armour()
+            self.combat()
 
     def food(self):
         print("State: Food Selection")
