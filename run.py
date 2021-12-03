@@ -4,6 +4,12 @@ TO DO:
 
 Main issue:
 - Doesn't auto heal when health is too low, this what causes early deaths ()
+
+
+Recursion Depth Issue:
+sys.setrecursionlimit(1500)
+
+or add a check to break out of the recursion after a certain amount during equipment selection (since this is a low priority state but will be used alot!)
 """
 
 from functions import *
@@ -125,6 +131,8 @@ class idle_bot:
         self.nothing_template = img_template("./weapon/nothing.PNG")
         self.w_nothing, self.h_nothing = self.nothing_template.shape[::-1]   
 
+        self.recursion_cnt = 0
+
         self.queue()
 
     def queue(self):
@@ -134,6 +142,11 @@ class idle_bot:
         self.armour_cnt = 0
         self.food_cnt = 0
         self.death_cnt = 0
+
+        self.recursion_cnt += 1
+        if self.recursion_cnt >= 100:
+            self.recursion_cnt = 0
+            return
 
         time.sleep(3)
         
@@ -333,3 +346,7 @@ class idle_bot:
 ################################ MAIN CODE #####################################
 print("Slyturtle's Mevlor Idle Bot")
 idle_bot()
+
+while(1):
+    print("!!!Reseting Recursion Depth!!!")
+    idle_bot()
