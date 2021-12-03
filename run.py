@@ -22,7 +22,7 @@ class idle_bot:
         self.weapon_template = img_template("./states/weapon.PNG")
         self.w_weapon, self.h_weapon = self.weapon_template.shape[::-1]
 
-        self.ok_template = img_template("ok.PNG")
+        self.ok_template = img_template("./states/ok.PNG")
         self.w_ok, self.h_ok = self.ok_template.shape[::-1]
 
         self.food_template = img_template("./states/food.PNG")
@@ -142,7 +142,8 @@ class idle_bot:
 
         while(start_raid == False):
             edged_img = take_image(self.mon,False)
-            ok, loc = matchTemplate(self.ok_template, edged_img, 0.9)
+            ok, loc = matchTemplate(self.ok_template, edged_img, 0.8)
+            print(ok)
             start_raid, start_raid_loc = matchTemplate(self.start_raid_template, edged_img, 0.9)
 
         if ok == True:
@@ -157,6 +158,8 @@ class idle_bot:
     def combat(self):
         print("State: Combat")
         time.sleep(1)
+
+        wave_complete = start_raid = you_died = False
 
         while(wave_complete != True and start_raid != True and you_died != True):
             edged_img = take_image(self.mon,False)
@@ -308,7 +311,7 @@ class idle_bot:
             print("Event: Selecting Ragnar Gear")
             matched_click(ragnar_loc, self.w_ragnar, self.h_ragnar)
         elif self.wave_cnt < 10:
-            _, item_loc = matchTemplate(self.one_x_template, edged_img, 0.6)
+            _, item_loc = matchTemplate(self.one_x_template, edged_img, 0.5)
             matched_click(item_loc, self.w_one_x, self.h_one_x)
         else:
             matched_click(nothing_loc, self.w_nothing, self.h_nothing)
